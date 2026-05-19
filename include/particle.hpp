@@ -3,19 +3,15 @@
 
 class Particle {
 public:
-    Vector2 position;
-    Vector2 velocity;
-    float lifetime;
+    Vector3 currentPosition;
+    Vector3 previousPosition;
+    Vector3 acceleration;
+    
+    float particleMass;
+    bool isPinned;
 
-    Particle(const Vector2& pos, const Vector2& vel, float life)
-        : position(pos), velocity(vel), lifetime(life) {}
+    Particle(float startX, float startY, float startZ, bool isPinned);
 
-    void update(float deltaTime) {
-        position = position + velocity * deltaTime;
-        lifetime -= deltaTime;
-    }
-
-    bool isAlive() const {
-        return lifetime > 0;
-    }
+    void applyExternalForce(Vector3 forceVector);
+    void update(float timeStep);
 };

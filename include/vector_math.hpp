@@ -1,18 +1,22 @@
 #pragma once
 #include <cmath>
 
-struct Vector2{
-    float x, y;
+struct Vector3{
+    float x, y, z;
 
-    Vector2 operator+(const Vector2& other) const {
-        return {x + other.x, y + other.y};
+    Vector3 operator+(const Vector3& other) const {
+        return {x + other.x, y + other.y, z + other.z };
     }
 
-    Vector2 operator-(const Vector2& other) const {
-        return {x - other.x, y - other.y};
+    Vector3 operator-(const Vector3& other) const {
+        return {x - other.x, y - other.y, z - other.z };
     }
 
-    Vector2 operator*(float scalar) const {
-        return {x * scalar, y * scalar};
+    Vector3 operator*(float scalar) const {
+        return {x * scalar, y * scalar, z * scalar};
+    }
+
+    float magnitude() const{
+        return sqrt((x*x + y*y + z*z));
     }
 };
