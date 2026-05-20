@@ -19,7 +19,6 @@ int main() {
 
     while (!WindowShouldClose()) {
         cloth.simulateStep(timeStep);
-
         BeginDrawing();
         ClearBackground(RAYWHITE);
         BeginMode3D(camera);

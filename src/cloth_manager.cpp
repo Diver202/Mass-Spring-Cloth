@@ -16,7 +16,6 @@ ClothManager::ClothManager(int width, int height, float space, float startX, flo
         for(int x = 0; x < width; x++){
             int currentIndex = y * width + x;
 
-            // Structural Connections (Black)
             if(x < width - 1) {
                 clothSprings.push_back(Spring(currentIndex, currentIndex + 1, space, stiffness));
             }
@@ -24,7 +23,6 @@ ClothManager::ClothManager(int width, int height, float space, float startX, flo
                 clothSprings.push_back(Spring(currentIndex, currentIndex + width, space, stiffness));
             }
 
-            // Shear Connections (Red)
             float shearSpace = space * 1.414f; 
             if(x < width - 1 && y < height - 1) {
                 clothSprings.push_back(Spring(currentIndex, currentIndex + width + 1, shearSpace, stiffness));
@@ -33,7 +31,6 @@ ClothManager::ClothManager(int width, int height, float space, float startX, flo
                 clothSprings.push_back(Spring(currentIndex, currentIndex + width - 1, shearSpace, stiffness));
             }
 
-            // Bending Connections (Green)
             float bendSpace = space * 2.0f;
             if(x < width - 2) {
                 clothSprings.push_back(Spring(currentIndex, currentIndex + 2, bendSpace, stiffness));
