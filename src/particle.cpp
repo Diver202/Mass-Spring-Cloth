@@ -9,9 +9,9 @@ Particle::Particle(float startX, float startY, float startZ, bool pinned){
     isPinned = pinned;
 }
 
-void Particle::applyExternalForce(Vector3 forceVector){
+void Particle::applyExternalForce(Vec3 forceVector){
     if(!isPinned){
-        Vector3 acceleration = forceVector * (1.0/particleMass);
+        Vec3 acceleration = forceVector * (1.0/particleMass);
         currentAcceleration.x += acceleration.x;
         currentAcceleration.y += acceleration.y;
         currentAcceleration.z += acceleration.z;
@@ -23,7 +23,7 @@ void Particle::update(float timeStep){
         return;
     }
 
-    Vector3 deltaX = currentPosition - previousPosition;
+    Vec3 deltaX = currentPosition - previousPosition;
     previousPosition = currentPosition;
 
 

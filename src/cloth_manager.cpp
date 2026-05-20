@@ -12,16 +12,34 @@ ClothManager::ClothManager(int width, int height, float space, float startX, flo
 
     float stiffness = 100.0f;
 
-    for(int y = 0; y<height; y++){
-        for(int x = 0; x<width; x++){
-            int currentIndex = y*width + x;
+    for(int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
+            int currentIndex = y * width + x;
 
-            if(x < width - 1){
+            // Structural Connections (Black)
+            if(x < width - 1) {
                 clothSprings.push_back(Spring(currentIndex, currentIndex + 1, space, stiffness));
             }
-
-            if(y < height - 1){
+            if(y < height - 1) {
                 clothSprings.push_back(Spring(currentIndex, currentIndex + width, space, stiffness));
+            }
+
+            // Shear Connections (Red)
+            float shearSpace = space * 1.414f; 
+            if(x < width - 1 && y < height - 1) {
+                clothSprings.push_back(Spring(currentIndex, currentIndex + width + 1, shearSpace, stiffness));
+            }
+            if(x > 0 && y < height - 1) {
+                clothSprings.push_back(Spring(currentIndex, currentIndex + width - 1, shearSpace, stiffness));
+            }
+
+            // Bending Connections (Green)
+            float bendSpace = space * 2.0f;
+            if(x < width - 2) {
+                clothSprings.push_back(Spring(currentIndex, currentIndex + 2, bendSpace, stiffness));
+            }
+            if(y < height - 2) {
+                clothSprings.push_back(Spring(currentIndex, currentIndex + width * 2, bendSpace, stiffness));
             }
         }
     }
@@ -33,7 +51,7 @@ void ClothManager::applySpringForces(){
         Particle& pA = clothParticles[spring.indexA];
         Particle& pB = clothParticles[spring.indexB];
 
-        Vector3 deltaPos = pA.currentPosition - pB.currentPosition;
+        Vec3 deltaPos = pA.currentPosition - pB.currentPosition;
         float currentDistance = deltaPos.magnitude();
 
 
@@ -43,7 +61,7 @@ void ClothManager::applySpringForces(){
 
         float forceMagnitude = spring.springConstant * (currentDistance - spring.restLength);
 
-        Vector3 appliedForce = deltaPos * (1/currentDistance) * forceMagnitude;
+        Vec3 appliedForce = deltaPos * (1/currentDistance) * forceMagnitude;
 
         pA.applyExternalForce(appliedForce * (-1));
 
