@@ -8,7 +8,7 @@ class ClothManager{
     public:
         std::vector<Particle> clothParticles;
         std::vector<Spring> clothSprings;
-        Vector3 gravityAcceleration;
+        Vec3 gravityAcceleration;
 
         ClothManager(int width, int height, float space, float startX, float startY, float startZ);
 
