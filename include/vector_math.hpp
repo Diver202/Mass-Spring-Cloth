@@ -21,6 +21,6 @@ struct Vec3{
     }
 
     float dot(const Vec3& other) const{
-        return (x * other.x, y * other.y , z * other.z);
+        return (x * other.x + y * other.y + z * other.z);
     }
 };

@@ -4,19 +4,23 @@
 void Optimizer::runGradientDescent(ClothManager& cloth,
                                     float targetY,
                                     int epochs,
-                                    float lr,
+                                    float learningRate,
                                     int simulationSteps,
                                     int gridWidth,
                                     int gridHeight){
 
     int bottomIndex = (gridHeight - 1) * gridWidth + gridWidth/2;
 
-    float timeStep = 0.016f;
+    // Implement sub-stepping for stability
+    int subSteps = 10;
+    float timeStep = 0.016f / subSteps;
+    int totalSteps = simulationSteps * subSteps;
 
     for(int epoch = 0; epoch<epochs; epoch++){
         cloth.resetSimulation();
 
-        for(int i = 0; i< simulationSteps; i++){
+        // Run the stable sub-steps
+        for(int i = 0; i < totalSteps; i++){
             cloth.simulateStep(timeStep);
         }
 
@@ -24,14 +28,14 @@ void Optimizer::runGradientDescent(ClothManager& cloth,
         float currentY = targetParticle.currentPosition.y;
         float dyDk = targetParticle.posGrad.y;
 
-        float loss = (currentY - targetY) * (currentY - targetY)/2;
+        float loss = (currentY - targetY) * (currentY - targetY)/2.0f;
         float lossGradient = (currentY - targetY) * dyDk;
 
         float currentK = cloth.clothSprings[0].springConstant;
-        currentK = currentK - (lr * lossGradient);
+        currentK = currentK - (learningRate * lossGradient);
 
-        if(currentK < 10){
-            currentK = 10;
+        if(currentK < 10.0f){
+            currentK = 10.0f;
         }
 
         for(auto& spring: cloth.clothSprings){
@@ -46,4 +50,3 @@ void Optimizer::runGradientDescent(ClothManager& cloth,
 
     cloth.resetSimulation();
 }
-

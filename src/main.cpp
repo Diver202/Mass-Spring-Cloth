@@ -11,9 +11,9 @@ int main() {
 
     ClothManager cloth(gridWidth, gridHeight, space, 0.0f, 0.0f, 0.0f);
 
-    float targetAltitude = -25.0f; 
-    int epochs = 15;
-    float learningRate = 10.0f;
+    float targetAltitude = -30.0f; 
+    int epochs = 150;
+    float learningRate = 0.0000001f;
     int stepsToSettle = 400;
 
     std::cout << "Starting Gradient Descent..." << std::endl;
@@ -22,10 +22,6 @@ int main() {
 
     InitWindow(1920, 1080, "Mass Spring Cloth");
     SetTargetFPS(60);
-
-    int gridWidth = 20;
-    int gridHeight = 20;
-    float space = 1.0f;
 
     // Calculate the physical dimensions of the cloth in world space
     float totalClothWidth = (gridWidth - 1) * space;
@@ -47,7 +43,6 @@ int main() {
     camera.fovy = 45.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
-    ClothManager cloth(gridWidth, gridHeight, space, 0.0f, 0.0f, 0.0f);
     float timeStep = 0.016f;
     int subSteps = 10;
     float subTimeStep = timeStep / subSteps;

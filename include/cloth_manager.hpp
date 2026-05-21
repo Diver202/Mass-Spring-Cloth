@@ -14,5 +14,6 @@ class ClothManager{
 
         void applySpringForces();
         void simulateStep(float timeStep);
+        void resetSimulation();
 };
 
