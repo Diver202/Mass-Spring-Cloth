@@ -11,15 +11,13 @@ void Optimizer::runGradientDescent(ClothManager& cloth,
 
     int bottomIndex = (gridHeight - 1) * gridWidth + gridWidth/2;
 
-    // Implement sub-stepping for stability
     int subSteps = 10;
     float timeStep = 0.016f / subSteps;
     int totalSteps = simulationSteps * subSteps;
 
-    for(int epoch = 0; epoch<epochs; epoch++){
+    for(int epoch = 0; epoch < epochs; epoch++){
         cloth.resetSimulation();
 
-        // Run the stable sub-steps
         for(int i = 0; i < totalSteps; i++){
             cloth.simulateStep(timeStep);
         }
@@ -30,6 +28,15 @@ void Optimizer::runGradientDescent(ClothManager& cloth,
 
         float loss = (currentY - targetY) * (currentY - targetY)/2.0f;
         float lossGradient = (currentY - targetY) * dyDk;
+
+        // --- GRADIENT CLIPPING ---
+        // Prevents chaotic spikes from breaking the optimization
+        float maxGradientLimit = 500.0f; 
+        if (lossGradient > maxGradientLimit) {
+            lossGradient = maxGradientLimit;
+        } else if (lossGradient < -maxGradientLimit) {
+            lossGradient = -maxGradientLimit;
+        }
 
         float currentK = cloth.clothSprings[0].springConstant;
         currentK = currentK - (learningRate * lossGradient);

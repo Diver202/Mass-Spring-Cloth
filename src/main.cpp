@@ -12,9 +12,9 @@ int main() {
     ClothManager cloth(gridWidth, gridHeight, space, 0.0f, 0.0f, 0.0f);
 
     float targetAltitude = -30.0f; 
-    int epochs = 150;
-    float learningRate = 0.0000001f;
-    int stepsToSettle = 400;
+    int epochs = 50;
+    float learningRate = 2.0f;
+    int stepsToSettle = 1500;
 
     std::cout << "Starting Gradient Descent..." << std::endl;
     Optimizer::runGradientDescent(cloth, targetAltitude, epochs, learningRate, stepsToSettle, gridWidth, gridHeight);
