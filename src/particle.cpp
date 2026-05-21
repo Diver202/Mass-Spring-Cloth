@@ -5,6 +5,10 @@ Particle::Particle(float startX, float startY, float startZ, bool pinned){
     previousPosition = {startX, startY, startZ};
     currentAcceleration = {0.0f,0.0f, 0.0f};
 
+    posGrad = {0.0f, 0.0f, 0.0f};
+    prevPosGrad = {0.0f, 0.0f, 0.0f};
+    accGrad = {0.0f, 0.0f, 0.0f};
+
     particleMass = 1.0f;
     isPinned = pinned;
 }
@@ -18,6 +22,15 @@ void Particle::applyExternalForce(Vec3 forceVector){
     }
 }
 
+void Particle::applyGradientForce(Vec3 gradVector){
+    if(!isPinned){
+        Vec3 accGradient = gradVector * (1/particleMass);
+        accGrad.x += accGradient.x;
+        accGrad.y += accGradient.y;
+        accGrad.z += accGradient.z;
+    }
+}
+
 void Particle::update(float timeStep){
     if(isPinned){
         return;
@@ -27,15 +40,6 @@ void Particle::update(float timeStep){
 
     Vec3 deltaX = currentPosition - previousPosition;
     previousPosition = currentPosition;
-
-
-    // Verlet formula
-    // currentPosition.x += deltaX.x + currentAcceleration.x*(timeStep*timeStep);
-    // currentPosition.y += deltaX.y + currentAcceleration.y*(timeStep*timeStep);
-    // currentPosition.z += deltaX.z + currentAcceleration.z*(timeStep*timeStep);
-
     currentPosition = currentPosition + deltaX * damping + (currentAcceleration*(timeStep*timeStep));
-
-    //testing this out
     currentAcceleration = {0.0f, 0.0f, 0.0f};
 }

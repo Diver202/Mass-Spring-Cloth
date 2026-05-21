@@ -6,6 +6,12 @@ public:
     Vec3 currentPosition;
     Vec3 previousPosition;
     Vec3 currentAcceleration;
+
+
+    // For gradient tracking 
+    Vec3 posGrad;
+    Vec3 prevPosGrad;
+    Vec3 accGrad;
     
     float particleMass;
     bool isPinned;
