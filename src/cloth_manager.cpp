@@ -57,14 +57,26 @@ void ClothManager::applySpringForces(){
         }
 
         float forceMagnitude = spring.springConstant * (currentDistance - spring.restLength);
-
-        Vec3 appliedForce = deltaPos * (1/currentDistance) * forceMagnitude;
+        Vec3 direction = deltaPos * (1/currentDistance);
+        Vec3 appliedForce = direction * forceMagnitude;
 
         pA.applyExternalForce(appliedForce * (-1));
 
         pB.applyExternalForce(appliedForce);
 
 
+        Vec3 directGrad = direction * (currentDistance - spring.restLength);
+
+        Vec3 deltaPosGrad = pA.posGrad - pB.posGrad;
+        float dotProduct = direction.dot(deltaPosGrad);
+
+        Vec3 term1 = direction * dotProduct;
+        Vec3 term2 = (deltaPosGrad - term1) * ((currentDistance - spring.restLength)/ currentDistance);
+        Vec3 spatialGrad = (term1 + term2) * spring.springConstant;
+        Vec3 totalForceGrad = directGrad + spatialGrad;
+
+        pA.applyGradientForce(totalForceGrad * (-1));
+        pB.applyGradientForce(totalForceGrad);
 
     }
 }
@@ -79,6 +91,13 @@ void ClothManager:: simulateStep(float timeStep){
 
     for(auto& particle: clothParticles){
         particle.update(timeStep);
+    }
+}
+
+
+void ClothManager::resetSimulation(){
+    for(auto& particle : clothParticles){
+        particle.resetState();
     }
 }
 

@@ -3,6 +3,8 @@
 
 class Particle {
 public:
+
+    //position and accelration
     Vec3 currentPosition;
     Vec3 previousPosition;
     Vec3 currentAcceleration;
@@ -19,5 +21,6 @@ public:
     Particle(float startX, float startY, float startZ, bool pinned);
 
     void applyExternalForce(Vec3 forceVector);
+    void applyGradientForce(Vec3 gradVector);
     void update(float timeStep);
 };

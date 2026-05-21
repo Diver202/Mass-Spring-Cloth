@@ -1,9 +1,25 @@
 #include <iostream>
-#include <algorithm> // Required for std::max
+#include <algorithm>
 #include "raylib.h"
 #include "../include/cloth_manager.hpp"
+#include "../include/optimizer.hpp"
 
 int main() {
+    int gridWidth = 20;
+    int gridHeight = 20;
+    float space = 1.0f;
+
+    ClothManager cloth(gridWidth, gridHeight, space, 0.0f, 0.0f, 0.0f);
+
+    float targetAltitude = -25.0f; 
+    int epochs = 15;
+    float learningRate = 10.0f;
+    int stepsToSettle = 400;
+
+    std::cout << "Starting Gradient Descent..." << std::endl;
+    Optimizer::runGradientDescent(cloth, targetAltitude, epochs, learningRate, stepsToSettle, gridWidth, gridHeight);
+    std::cout << "Optimization Complete! Opening Visualizer..." << std::endl;
+
     InitWindow(1920, 1080, "Mass Spring Cloth");
     SetTargetFPS(60);
 

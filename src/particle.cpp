@@ -1,6 +1,7 @@
 #include "../include/particle.hpp"
 
 Particle::Particle(float startX, float startY, float startZ, bool pinned){
+    initialPosition = {startX, startY, startZ};
     currentPosition = {startX, startY, startZ};
     previousPosition = {startX, startY, startZ};
     currentAcceleration = {0.0f,0.0f, 0.0f};
@@ -12,6 +13,18 @@ Particle::Particle(float startX, float startY, float startZ, bool pinned){
     particleMass = 1.0f;
     isPinned = pinned;
 }
+
+void Particle::resetState(){
+    currentPosition = initialPosition;
+    previousPosition = initialPosition;
+
+    currentAcceleration = {0.0f, 0.0f, 0.0f};
+
+
+    posGrad = {0.0f, 0.0f, 0.0f};
+    prevPosGrad = {0.0f, 0.0f, 0.0f};
+    accGrad = {0.0f, 0.0f, 0.0f};
+};
 
 void Particle::applyExternalForce(Vec3 forceVector){
     if(!isPinned){
@@ -42,4 +55,10 @@ void Particle::update(float timeStep){
     previousPosition = currentPosition;
     currentPosition = currentPosition + deltaX * damping + (currentAcceleration*(timeStep*timeStep));
     currentAcceleration = {0.0f, 0.0f, 0.0f};
+
+
+    Vec3 deltaGrad = posGrad - prevPosGrad;
+    prevPosGrad = posGrad;
+    posGrad = posGrad + deltaGrad * damping + (accGrad * (timeStep * timeStep));
+    accGrad = {0.0f, 0.0f, 0.0f};
 }
