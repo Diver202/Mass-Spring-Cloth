@@ -1,24 +1,46 @@
 #include <iostream>
+#include <algorithm> // Required for std::max
 #include "raylib.h"
 #include "../include/cloth_manager.hpp"
 
 int main() {
-    InitWindow(800, 600, "Mass Spring Cloth");
+    InitWindow(1920, 1080, "Mass Spring Cloth");
     SetTargetFPS(60);
 
+    int gridWidth = 20;
+    int gridHeight = 20;
+    float space = 1.0f;
+
+    // Calculate the physical dimensions of the cloth in world space
+    float totalClothWidth = (gridWidth - 1) * space;
+    float totalClothHeight = (gridHeight - 1) * space;
+
+    // Find the center point
+    float targetCenterX = totalClothWidth / 2.0f;
+    float targetCenterY = -totalClothHeight / 2.0f; 
+
+    // Calculate how far back the camera needs to be on the Z-axis
+    // Multiplying the largest dimension by 1.5 leaves a nice margin around the edges
+    float maxDimension = std::max(totalClothWidth, totalClothHeight);
+    float cameraDistanceZ = maxDimension * 1.5f;
+
     Camera3D camera = { 0 };
-    camera.position = (Vector3){ 5.0f, 5.0f, 15.0f };
-    camera.target = (Vector3){ 5.0f, -5.0f, 0.0f };
+    camera.position = (Vector3){ targetCenterX, targetCenterY, cameraDistanceZ };
+    camera.target = (Vector3){ targetCenterX, targetCenterY, 0.0f };
     camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
     camera.fovy = 45.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
-    float space = 1.0f;
-    ClothManager cloth(10, 10, space, 0.0f, 0.0f, 0.0f);
+    ClothManager cloth(gridWidth, gridHeight, space, 0.0f, 0.0f, 0.0f);
     float timeStep = 0.016f;
+    int subSteps = 10;
+    float subTimeStep = timeStep / subSteps;
 
     while (!WindowShouldClose()) {
-        cloth.simulateStep(timeStep);
+        for(int i = 0; i < subSteps; i++) {
+            cloth.simulateStep(subTimeStep);
+        }
+
         BeginDrawing();
         ClearBackground(RAYWHITE);
         BeginMode3D(camera);

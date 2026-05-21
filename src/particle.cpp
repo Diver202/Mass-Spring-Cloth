@@ -23,6 +23,8 @@ void Particle::update(float timeStep){
         return;
     }
 
+    float damping = 0.999f;
+
     Vec3 deltaX = currentPosition - previousPosition;
     previousPosition = currentPosition;
 
@@ -32,5 +34,8 @@ void Particle::update(float timeStep){
     // currentPosition.y += deltaX.y + currentAcceleration.y*(timeStep*timeStep);
     // currentPosition.z += deltaX.z + currentAcceleration.z*(timeStep*timeStep);
 
-    currentPosition = currentPosition + deltaX + (currentAcceleration*(timeStep*timeStep));
+    currentPosition = currentPosition + deltaX * damping + (currentAcceleration*(timeStep*timeStep));
+
+    //testing this out
+    currentAcceleration = {0.0f, 0.0f, 0.0f};
 }
